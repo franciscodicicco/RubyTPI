@@ -280,20 +280,59 @@ module RN
       end
 
       class Show < Dry::CLI::Command
-        desc 'Show a note'
+        desc 'Muestra el contenido de una nota. Opcionalmente, se puede pasar el parámetro (--book "nombre_cuaderno")'
 
         argument :title, required: true, desc: 'Title of the note'
         option :book, type: :string, desc: 'Book'
 
-        example [
-          'todo                        # Shows a note titled "todo" from the global book',
-          '"New note" --book "My book" # Shows a note titled "New note" from the book "My book"',
-          'thoughts --book Memoires    # Shows a note titled "thoughts" from the book "Memoires"'
-        ]
+        # example [
+        #   'todo                        # Shows a note titled "todo" from the global book',
+        #   '"New note" --book "My book" # Shows a note titled "New note" from the book "My book"',
+        #   'thoughts --book Memoires    # Shows a note titled "thoughts" from the book "Memoires"'
+        # ]
 
         def call(title:, **options)
           book = options[:book]
-          warn "TODO: Implementar vista de la nota con título '#{title}' (del libro '#{book}').\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          default_directory = ".my_rns"
+          default_book = "Cuaderno Global"
+          extension = ".rn"
+
+          # Seteo el path default del directorio ".my_rns"
+            path = "#{Dir.home}/#{default_directory}"
+
+          # Si me llega un book como parámetro
+          if (book)
+
+            # Filtro caracteres inválidos del nombre del book ("/") y los reemplazo con un guión bajo ("_")
+            filtered_book = book.gsub("/", "_")
+
+            # Completo el path con el book que llegó por parametro
+            path += "/#{filtered_book}"
+
+            # Chequeo que el book exista --> Si no existe, retorno un mensaje de error.
+            if (!Dir.exists?(path))
+              return warn "El cuaderno '#{filtered_book}' no existe"
+            end
+          else
+            # Completo el path con el book default "Cuaderno Global"
+            path += "/#{default_book}"
+          end
+
+          # Filtro caracteres inválidos del nombre de la nota ("/") y los reemplazo con un guión bajo ("_")
+          filtered_title = title.gsub("/", "_")
+
+          # Completo el path con el nombre de la nota
+          path += "/#{filtered_title}#{extension}"
+
+          # Chequeo que exista la nota --> Si existe, la muestro.
+          if (File.file?(path))
+            puts "Contenido de la nota '#{filtered_title}':"
+            puts File.read(path)
+          else
+            warn "La nota '#{filtered_title}' no existe"
+          end
+
+          # warn "TODO: Implementar vista de la nota con título '#{title}' (del libro '#{book}').\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
         end
       end
     end
