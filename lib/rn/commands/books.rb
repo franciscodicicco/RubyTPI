@@ -24,9 +24,9 @@ module RN
           # Chequeo que no exista la carpeta y la creo.
           if (!Dir.exists?(path))
             Dir.mkdir(path)
-            puts "El cuaderno fue creado exitosamente"
+            puts "El cuaderno '#{name}' fue creado exitosamente"
           else
-            warn "El cuaderno ya existe"
+            warn "El cuaderno '#{name}' ya existe"
           end
 
           # warn "TODO: Implementar creación del cuaderno de notas con nombre '#{name}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
@@ -39,15 +39,29 @@ module RN
         argument :name, required: false, desc: 'Name of the book'
         option :global, type: :boolean, default: false, desc: 'Operate on the global book'
 
-        example [
-          '--global  # Deletes all notes from the global book',
-          '"My book" # Deletes a book named "My book" and all of its notes',
-          'Memoires  # Deletes a book named "Memoires" and all of its notes'
-        ]
+        # example [
+        #   '--global  # Deletes all notes from the global book',
+        #   '"My book" # Deletes a book named "My book" and all of its notes',
+        #   'Memoires  # Deletes a book named "Memoires" and all of its notes'
+        # ]
 
         def call(name: nil, **options)
           global = options[:global]
-          warn "TODO: Implementar borrado del cuaderno de notas con nombre '#{name}' (global=#{global}).\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          default_directory = ".my_rns"
+          default_book = "Cuaderno Global"
+
+          # Si me llega global como parámetro --> elimino todas las notas del Cuaderno Global
+          if (global)
+            ####### Elimino todas las notas del Cuaderno Global
+            return puts "Todas las notas del '#{default_book}' fueron eliminadas"
+          end
+
+          # Sino, elimino el book que me llegó como parámetro y todas sus notas
+          ####### Elimino todas las notas del book "name"
+          ####### Elimino el book
+          return puts "El cuaderno '#{name}' y todas sus notas fueron eliminadas"
+
+          # warn "TODO: Implementar borrado del cuaderno de notas con nombre '#{name}' (global=#{global}).\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
         end
       end
 
