@@ -2,22 +2,20 @@ module RN
   module Commands
     module Notes
       class Create < Dry::CLI::Command
-        desc 'Crear una nota. Se debe especificar el título. Opcionalmente, se pueden pasar dos parámetros (--book "nombre_cuaderno" y --content "un_contenido")'
+        desc 'Crear una nota. Se debe especificar el título. Opcionalmente, se le puede pasar el parámetro (--book "nombre_cuaderno")'
 
         argument :title, required: true, desc: 'Title of the note'
         option :book, type: :string, desc: 'Book'
-        option :content, type: :string, desc: 'Content of the note'
 
         # example [
         #   todo                         # Creates a note titled "todo" in the global book',
         #   '"New note" --book "My book" # Creates a note titled "New note" in the book "My book"',
         #   'thoughts --book Memoires    # Creates a note titled "thoughts" in the book "Memoires"'
-        #   ruby bin/rn notes create "nueva nota" --book "nuevo cuaderno" --content "programando en ruby!"
+        #   ruby bin/rn notes create "nueva nota" --book "nuevo cuaderno"
         # ]
 
         def call(title:, **options)
           book = options[:book]
-          content = options[:content]
           default_directory = ".my_rns"
           default_book = "Cuaderno Global"
           extension = ".rn"
@@ -52,10 +50,8 @@ module RN
 
           # Chequeo que no exista otra nota con el mismo nombre dentro del mismo book --> Si no existe, la creo.
           if (!File.file?(path))
-            new_file = File.new(path, "w")
-            new_file.puts(content)
-            new_file.close
-            puts "La nota '#{filtered_title}' fue creada exitosamente"
+            TTY::Editor.open(path)
+            return puts "La nota '#{filtered_title}' fue creada exitosamente"
           else
             warn "La nota '#{filtered_title}' ya existe"
           end
