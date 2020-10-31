@@ -239,7 +239,12 @@ module RN
               return warn "El cuaderno '#{filtered_book}' no existe"
             # Si existe, listo las notas del book especificado
             else
-              return puts (Dir.entries(path) - %w[. ..])
+              # Chequeo que haya notas --> Si no hay, retorno un mensaje avisando que no hay notas
+              if ((Dir.entries(path) - %w[. ..]).empty?)
+                return warn "No hay notas en el cuaderno '#{filtered_book}'"
+              else
+                return puts (Dir.entries(path) - %w[. ..])
+              end
             end
           end
 
@@ -247,8 +252,13 @@ module RN
           if (global)
             # Completo el path con el book default "Cuaderno Global"
             path += "/#{default_book}"
-            # Listo las notas del Cuaderno Global
-            return puts (Dir.entries(path) - %w[. ..])
+            # Chequeo que haya notas --> Si no hay, retorno un mensaje avisando que no hay notas
+            if ((Dir.entries(path) - %w[. ..]).empty?)
+              return warn "No hay notas en el cuaderno '#{default_book}'"
+            else
+              # Listo las notas del Cuaderno Global
+              return puts (Dir.entries(path) - %w[. ..])
+            end
           end
 
           # Si no me llegaron parámetros opcionales, listo todas las notas (incluidas las del Cuaderno Global)
@@ -258,7 +268,11 @@ module RN
           books_count.times { |i|
             (new_path = path + "/#{books_names[i]}")
             puts "Notas del cuaderno '#{books_names[i]}':"
-            puts (Dir.entries(new_path) - %w[. ..])
+            if ((Dir.entries(new_path) - %w[. ..]).empty?)
+              puts "No hay notas en el cuaderno"
+            else
+              puts (Dir.entries(new_path) - %w[. ..])
+            end
           }
 
           # warn "TODO: Implementar listado de las notas del libro '#{book}' (global=#{global}).\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
