@@ -2,20 +2,65 @@ module RN
   module Commands
     module Notes
       class Create < Dry::CLI::Command
-        desc 'Create a note'
+        desc 'Crear una nota. Se debe especificar el título. Opcionalmente, se pueden pasar dos parámetros (--book "un_cuaderno" y --content "un_contenido")'
 
         argument :title, required: true, desc: 'Title of the note'
         option :book, type: :string, desc: 'Book'
+        option :content, type: :string, desc: 'Content of the note'
 
-        example [
-          'todo                        # Creates a note titled "todo" in the global book',
-          '"New note" --book "My book" # Creates a note titled "New note" in the book "My book"',
-          'thoughts --book Memoires    # Creates a note titled "thoughts" in the book "Memoires"'
-        ]
+        # example [
+        #   todo                         # Creates a note titled "todo" in the global book',
+        #   '"New note" --book "My book" # Creates a note titled "New note" in the book "My book"',
+        #   'thoughts --book Memoires    # Creates a note titled "thoughts" in the book "Memoires"'
+        #   ruby bin/rn notes create "nueva nota" --book "nuevo cuaderno" --content "programando en ruby!"
+        # ]
 
         def call(title:, **options)
           book = options[:book]
-          warn "TODO: Implementar creación de la nota con título '#{title}' (en el libro '#{book}').\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          content = options[:content]
+          default_directory = ".my_rns"
+          default_book = "Cuaderno Global"
+          extension = ".rn"
+
+          # Seteo el path default del directorio ".my_rns"
+            path = "#{Dir.home}/#{default_directory}"
+
+          # Si me llega un book como parámetro
+          if (book)
+
+            # Filtro caracteres inválidos del nombre del book ("/") y los reemplazo con un guión bajo ("_")
+            filtered_book = book.gsub("/", "_")
+
+            # Completo el path con el book que llegó por parametro
+            path += "/#{filtered_book}"
+
+            # Chequeo que el book exista --> Si no existe, lo creo.
+            if (!Dir.exists?(path))
+              Dir.mkdir(path)
+            end
+
+          else
+            # Completo el path con el book default "Cuaderno Global"
+            path += "/#{default_book}"
+          end
+
+          # Filtro caracteres inválidos del nombre de la nota ("/") y los reemplazo con un guión bajo ("_")
+          filtered_title = title.gsub("/", "_")
+
+          # Completo el path con el path de la nota
+            path += "/#{filtered_title}#{extension}"
+
+          # Chequeo que no exista otra nota con el mismo nombre dentro del mismo book --> Si no existe, la creo.
+          if (!File.file?(path))
+            new_file = File.new(path, "w")
+            new_file.puts(content)
+            new_file.close
+            puts "La nota fue creada exitosamente"
+          else
+            warn "La nota ya existe"
+          end
+
+          # warn "TODO: Implementar creación de la nota con título '#{title}' (en el libro '#{book}').\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
         end
       end
 

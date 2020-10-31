@@ -2,17 +2,34 @@ module RN
   module Commands
     module Books
       class Create < Dry::CLI::Command
-        desc 'Create a book'
+        desc 'Crear un cuaderno. Se debe especificar el nombre.'
 
         argument :name, required: true, desc: 'Name of the book'
 
-        example [
-          '"My book" # Creates a new book named "My book"',
-          'Memoires  # Creates a new book named "Memoires"'
-        ]
+        # example [
+        #   '"My book" # Creates a new book named "My book"',
+        #   'Memoires  # Creates a new book named "Memoires"'
+        #   ruby bin/rn books create "nuevo book"
+        # ]
 
         def call(name:, **)
-          warn "TODO: Implementar creación del cuaderno de notas con nombre '#{name}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          default_directory = ".my_rns"
+
+          # Filtro caracteres inválidos ("/") y los reemplazo con un guión bajo ("_")
+          filtered_name = name.gsub("/", "_")
+
+          # Seteo el path con el nombre del book que llegó por parámetro
+          path = "#{Dir.home}/#{default_directory}/#{filtered_name}"
+
+          # Chequeo que no exista la carpeta y la creo.
+          if (!Dir.exists?(path))
+            Dir.mkdir(path)
+            puts "El cuaderno fue creado exitosamente"
+          else
+            warn "El cuaderno ya existe"
+          end
+
+          # warn "TODO: Implementar creación del cuaderno de notas con nombre '#{name}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
         end
       end
 
