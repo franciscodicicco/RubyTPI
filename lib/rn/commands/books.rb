@@ -1,7 +1,9 @@
+require_relative "validator"
 module RN
   module Commands
     module Books
       class Create < Dry::CLI::Command
+        include Validator
         desc 'Crear un cuaderno. Se debe especificar el nombre.'
 
         argument :name, required: true, desc: 'Name of the book'
@@ -13,28 +15,29 @@ module RN
         # ]
 
         def call(name:, **)
-          default_directory = ".my_rns"
 
-          # Filtro caracteres inválidos ("/") y los reemplazo con un guión bajo ("_")
-          filtered_name = name.gsub("/", "_")
+          set_default_path()
+          check_directory(@@path)
 
-          # Seteo el path con el nombre del book que llegó por parámetro
-          path = "#{Dir.home}/#{default_directory}/#{filtered_name}"
+          filtered_name = turn_invalid_into_valid(name)
 
-          # Chequeo que no exista la carpeta y la creo.
-          if (!Dir.exists?(path))
-            Dir.mkdir(path)
+          # Completo el path con el book que llegó por parametro
+          add_to_path("/#{filtered_name}")
+
+          # Chequeo que no exista el cuaderno --> Si no existe, lo creo.
+          if (!Dir.exists?(@@path))
+            Dir.mkdir(@@path)
             puts "El cuaderno '#{name}' fue creado exitosamente"
           else
             warn "El cuaderno '#{name}' ya existe"
           end
 
-          # warn "TODO: Implementar creación del cuaderno de notas con nombre '#{name}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
         end
       end
 
       class Delete < Dry::CLI::Command
-        desc 'Delete a book'
+        include Validator
+        desc 'Eliminar un cuaderno. Se debe especificar el nombre. Opcionalmente, se puede pasar el parámetro (--global)'
 
         argument :name, required: false, desc: 'Name of the book'
         option :global, type: :boolean, default: false, desc: 'Operate on the global book'
@@ -47,21 +50,39 @@ module RN
 
         def call(name: nil, **options)
           global = options[:global]
-          default_directory = ".my_rns"
-          default_book = "Cuaderno Global"
 
-          # Si me llega global como parámetro --> elimino todas las notas del Cuaderno Global
-          if (global)
-            ####### Elimino todas las notas del Cuaderno Global
-            return puts "Todas las notas del '#{default_book}' fueron eliminadas"
+          # Si me llega como parámetro el cuaderno "global" --> alerto un error
+          if (name == @@default_book)
+            warn "No se puede eliminar el cuaderno '#{@@default_book}'. Si desea eliminar su contenido, agregue el comando --global"
+            return
           end
 
-          # Sino, elimino el book que me llegó como parámetro y todas sus notas
-          ####### Elimino todas las notas del book "name"
-          ####### Elimino el book
+          set_default_path()
+
+          # Si me llega la opción "--global" como parámetro --> elimino todas las notas del Cuaderno Global
+          if (global)
+            # Completo el path con el Cuaderno Global
+            add_to_path("/#{@@default_book}")
+            # Elimino todas las notas dentro del Cuaderno Global
+            `rm -rf "#{@@path}"/*`
+            return puts "Todas las notas del '#{@@default_book}' fueron eliminadas"
+          end
+
+          # Si no me llega --global, elimino el cuaderno que me llegó como parámetro y todas sus notas
+          filtered_name = turn_invalid_into_valid(name)
+
+          # Completo el path con el book que llegó por parametro
+          add_to_path("/#{filtered_name}")
+
+          # Chequeo que el book exista --> Si no existe, retorno un mensaje de error.
+          if (!Dir.exists?(@@path))
+            return warn "El cuaderno '#{filtered_name}' no existe"
+          end
+
+          # Elimino el cuaderno que me llegó como parámetro y todas sus notas
+          `rm -rf "#{@@path}"`
           return puts "El cuaderno '#{name}' y todas sus notas fueron eliminadas"
 
-          # warn "TODO: Implementar borrado del cuaderno de notas con nombre '#{name}' (global=#{global}).\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
         end
       end
 
