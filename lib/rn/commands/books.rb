@@ -63,6 +63,10 @@ module RN
           if (global)
             # Completo el path con el Cuaderno Global
             add_to_path("/#{@@default_book}")
+            # Chequeo que el book exista --> Si no existe, retorno mensaje de error.
+            if (!Dir.exists?(@@path))
+              return warn "El cuaderno '#{@@default_book}' no existe. Primero debe crear una nota o un cuaderno."
+            end
             # Elimino todas las notas dentro del Cuaderno Global
             `rm -rf "#{@@path}"/*`
             return puts "Todas las notas del '#{@@default_book}' fueron eliminadas"
@@ -87,11 +91,11 @@ module RN
       end
 
       class List < Dry::CLI::Command
-        desc 'List books'
+        desc 'Listado de cuadernos'
 
-        example [
-          '          # Lists every available book'
-        ]
+        # example [
+        #   '          # Lists every available book'
+        # ]
 
         def call(*)
           warn "TODO: Implementar listado de los cuadernos de notas.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."

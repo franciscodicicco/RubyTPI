@@ -265,11 +265,11 @@ module RN
             add_to_path("/#{@@default_book}")
             # Chequeo que el book exista --> Si no existe, retorno mensaje de error.
             if (!Dir.exists?(@@path))
-              return warn "El cuaderno '#{default_book}' no existe. Primero debe crear una nota o un cuaderno."
+              return warn "El cuaderno '#{@@default_book}' no existe. Primero debe crear una nota o un cuaderno."
             end
             # Chequeo que haya notas --> Si no hay, retorno un mensaje avisando que no hay notas
             if ((Dir.entries(@@path) - %w[. ..]).empty?)
-              return warn "No hay notas en el cuaderno '#{default_book}'"
+              return warn "No hay notas en el cuaderno '#{@@default_book}'"
             else
               # Listo las notas del Cuaderno Global
               return puts (Dir.entries(@@path) - %w[. ..])
