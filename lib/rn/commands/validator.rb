@@ -19,6 +19,11 @@ module Validator
         end
     end
 
+    def default_directory_exists?()
+        # Chequeo que el directorio default ".my_rns" exista
+        return Dir.exists?("#{Dir.home}/#{@@default_directory}")
+    end
+
     def turn_invalid_into_valid(name)
         # Filtro caracteres inválidos del nombre ("/") y los reemplazo con un guión bajo ("_")
         return name.gsub("/", "_")

@@ -4,17 +4,16 @@ module RN
     module Notes
       class Create < Dry::CLI::Command
         include Validator
-        desc 'Crear una nota. Se debe especificar el título. Opcionalmente, se le puede pasar el parámetro (--book "nombre_cuaderno")'
+        desc 'Crear una nota. Se debe especificar el título. Opcionalmente, se le puede pasar el parámetro "--book" para crear una nota dentro de un cuaderno específico. Si no se especifica un book, la nota se almacenará en el cuaderno global.'
 
         argument :title, required: true, desc: 'Title of the note'
         option :book, type: :string, desc: 'Book'
 
-        # example [
-        #   todo                         # Creates a note titled "todo" in the global book',
-        #   '"New note" --book "My book" # Creates a note titled "New note" in the book "My book"',
-        #   'thoughts --book Memoires    # Creates a note titled "thoughts" in the book "Memoires"'
-        #   ruby bin/rn notes create "nueva nota" --book "nuevo cuaderno"
-        # ]
+        example [
+          'todo                         # Creates a note titled "todo" in the global book',
+          '"New note" --book "My book" # Creates a note titled "New note" in the book "My book"',
+          'thoughts --book Memoires    # Creates a note titled "thoughts" in the book "Memoires"'
+        ]
 
         def call(title:, **options)
           book = options[:book]
@@ -30,9 +29,9 @@ module RN
             # Completo el path con el book que llegó por parametro
             add_to_path("/#{filtered_book}")
 
-            # Chequeo que el book exista --> Si no existe, lo creo.
+            # Chequeo que el book exista
             if (!Dir.exists?(@@path))
-              Dir.mkdir(@@path)
+              return warn "El cuaderno '#{filtered_book}' no existe. Debe crearlo primero para luego agregarle una nota."
             end
 
           else
@@ -57,19 +56,24 @@ module RN
 
       class Delete < Dry::CLI::Command
         include Validator
-        desc 'Eliminar una nota. Se debe especificar el título. Opcionalmente, se puede pasar el parámetro (--book "nombre_cuaderno")'
+        desc 'Eliminar una nota. Se debe especificar el título. Opcionalmente, se puede pasar el parámetro "--book" para eliminar una nota dentro de un cuaderno específico. Si no se especifica un book, la nota se eliminará desde el cuaderno global.'
 
         argument :title, required: true, desc: 'Title of the note'
         option :book, type: :string, desc: 'Book'
 
-        # example [
-        #   'todo                        # Deletes a note titled "todo" from the global book',
-        #   '"New note" --book "My book" # Deletes a note titled "New note" from the book "My book"',
-        #   'thoughts --book Memoires    # Deletes a note titled "thoughts" from the book "Memoires"'
-        # ]
+        example [
+          'todo                        # Deletes a note titled "todo" from the global book',
+          '"New note" --book "My book" # Deletes a note titled "New note" from the book "My book"',
+          'thoughts --book Memoires    # Deletes a note titled "thoughts" from the book "Memoires"'
+        ]
 
         def call(title:, **options)
           book = options[:book]
+
+          # Chequeo que el default directory exista
+          if (!default_directory_exists?)
+            return warn "No existen notas ni cuadernos. Primero debe crear una nota o un cuaderno."
+          end
 
           set_default_path()
 
@@ -108,19 +112,24 @@ module RN
 
       class Edit < Dry::CLI::Command
         include Validator
-        desc 'Edit the content a note'
+        desc 'Editar una nota. Se debe especificar el título. Opcionalmente, se puede pasar el parámetro "--book" para buscar una nota dentro de un cuaderno específico. Si no se especifica un book, la nota se buscará dentro del cuaderno global.'
 
         argument :title, required: true, desc: 'Title of the note'
         option :book, type: :string, desc: 'Book'
 
-        # example [
-        #   'todo                        # Edits a note titled "todo" from the global book',
-        #   '"New note" --book "My book" # Edits a note titled "New note" from the book "My book"',
-        #   'thoughts --book Memoires    # Edits a note titled "thoughts" from the book "Memoires"'
-        # ]
+        example [
+          'todo                        # Edits a note titled "todo" from the global book',
+          '"New note" --book "My book" # Edits a note titled "New note" from the book "My book"',
+          'thoughts --book Memoires    # Edits a note titled "thoughts" from the book "Memoires"'
+        ]
 
         def call(title:, **options)
           book = options[:book]
+
+          # Chequeo que el default directory exista
+          if (!default_directory_exists?)
+            return warn "No existen notas ni cuadernos. Primero debe crear una nota o un cuaderno."
+          end
 
           set_default_path()
 
@@ -160,20 +169,25 @@ module RN
 
       class Retitle < Dry::CLI::Command
         include Validator
-        desc 'Retitular una nota. Se deben especificar el viejo_titulo y el nuevo_titulo. Opcionalmente, se puede pasar el parámetro (--book "nombre_cuaderno")'
+        desc 'Renombrar el título de una nota. Se deben especificar el viejo_titulo y el nuevo_titulo. Opcionalmente, se puede pasar el parámetro "--book" para buscar una nota dentro de un cuaderno específico. Si no se especifica un book, la nota se buscará dentro del cuaderno global.'
 
         argument :old_title, required: true, desc: 'Current title of the note'
         argument :new_title, required: true, desc: 'New title for the note'
         option :book, type: :string, desc: 'Book'
 
-        # example [
-        #   'todo TODO                                 # Changes the title of the note titled "todo" from the global book to "TODO"',
-        #   '"New note" "Just a note" --book "My book" # Changes the title of the note titled "New note" from the book "My book" to "Just a note"',
-        #   'thoughts thinking --book Memoires         # Changes the title of the note titled "thoughts" from the book "Memoires" to "thinking"'
-        # ]
+        example [
+          'todo TODO                                 # Changes the title of the note titled "todo" from the global book to "TODO"',
+          '"New note" "Just a note" --book "My book" # Changes the title of the note titled "New note" from the book "My book" to "Just a note"',
+          'thoughts thinking --book Memoires         # Changes the title of the note titled "thoughts" from the book "Memoires" to "thinking"'
+        ]
 
         def call(old_title:, new_title:, **options)
           book = options[:book]
+
+          # Chequeo que el default directory exista
+          if (!default_directory_exists?)
+            return warn "No existen notas ni cuadernos. Primero debe crear una nota o un cuaderno."
+          end
 
           set_default_path()
 
@@ -219,21 +233,26 @@ module RN
 
       class List < Dry::CLI::Command
         include Validator
-        desc 'Listado de notas. Opcionalmente, se pueden pasar los parámetros (--global y --book "nombre_cuaderno")'
+        desc 'Listado de notas. Opcionalmente, se puede pasar el parámetro "--book" para listar las notas dentro de un cuaderno específico o el parámetro "--global" para listar todas las notas del cuaderno global. Si no se pasan argumentos, se listarán todas las notas.'
 
         option :book, type: :string, desc: 'Book'
         option :global, type: :boolean, default: false, desc: 'List only notes from the global book'
 
-        # example [
-        #   '                 # Lists notes from all books (including the global book)',
-        #   '--global         # Lists notes from the global book',
-        #   '--book "My book" # Lists notes from the book named "My book"',
-        #   '--book Memoires  # Lists notes from the book named "Memoires"'
-        # ]
+        example [
+          '                 # Lists notes from all books (including the global book)',
+          '--global         # Lists notes from the global book',
+          '--book "My book" # Lists notes from the book named "My book"',
+          '--book Memoires  # Lists notes from the book named "Memoires"'
+        ]
 
         def call(**options)
           book = options[:book]
           global = options[:global]
+
+          # Chequeo que el default directory exista
+          if (!default_directory_exists?)
+            return warn "No existen notas para listar. Primero debe crear una nota o un cuaderno."
+          end
 
           set_default_path()
 
@@ -276,11 +295,6 @@ module RN
             end
           end
 
-          # Chequeo que el path exista --> Si no existe, retorno mensaje de error.
-            if (!Dir.exists?(@@path))
-              return warn "No se pueden listar las notas. Primero debe crear una nota o un cuaderno."
-            end
-
           # Si no me llegaron parámetros opcionales, listo todas las notas (incluidas las del Cuaderno Global)
           books_count = (Dir.entries(@@path) - %w[. ..]).count
           books_names = (Dir.entries(@@path) - %w[. ..])
@@ -300,19 +314,24 @@ module RN
 
       class Show < Dry::CLI::Command
         include Validator
-        desc 'Muestra el contenido de una nota. Opcionalmente, se puede pasar el parámetro (--book "nombre_cuaderno")'
+        desc 'Muestra el contenido de una nota. Se debe especificar el título. Opcionalmente, se puede pasar el parámetro "--book" para buscar una nota dentro de un cuaderno específico. Si no se especifica un book, la nota se buscará dentro del cuaderno global.'
 
         argument :title, required: true, desc: 'Title of the note'
         option :book, type: :string, desc: 'Book'
 
-        # example [
-        #   'todo                        # Shows a note titled "todo" from the global book',
-        #   '"New note" --book "My book" # Shows a note titled "New note" from the book "My book"',
-        #   'thoughts --book Memoires    # Shows a note titled "thoughts" from the book "Memoires"'
-        # ]
+        example [
+          'todo                        # Shows a note titled "todo" from the global book',
+          '"New note" --book "My book" # Shows a note titled "New note" from the book "My book"',
+          'thoughts --book Memoires    # Shows a note titled "thoughts" from the book "Memoires"'
+        ]
 
         def call(title:, **options)
           book = options[:book]
+
+          # Chequeo que el default directory exista
+          if (!default_directory_exists?)
+            return warn "No existen notas ni cuadernos. Primero debe crear una nota o un cuaderno."
+          end
 
           set_default_path()
 
