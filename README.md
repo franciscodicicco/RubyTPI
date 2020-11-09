@@ -9,6 +9,7 @@ A continuación se listan las principales decisiones tomadas:
 -   Se utilizó TTY-Editor para realizar la creación y la edición de notas.
 -   Si al crear una nota se especifica un cuaderno no existente, la nota no se creará y se alertará que debe crear primero el cuaderno y luego la nota.
 -   El borrado de un cuaderno eliminará todas las notas contenidas dentro del mismo.
+-   Cuando un nombre de un cuaderno o un título de una nota posee caracteres inválidos, éstos son filtrados y se reemplazan para convertirse en "válidos". Se toma como caracter inválido la `"/"` (barra) y se reemplaza por un `"_"` (guión bajo).
 
 # Books --> Uso y comandos
 
@@ -16,27 +17,27 @@ Ejemplo de creación de un cuaderno --> Ejecutar el siguiente comando: ruby bin/
 
 ## books 'create'
 
-Descripción: Crear un cuaderno. Se debe especificar el nombre.
-Argumentos obligatorios: "name"
-Argumentos opcionales: -
+-   Descripción: Crear un cuaderno. Se debe especificar el nombre.
+-   Argumentos obligatorios: "name"
+-   Argumentos opcionales: -
 
 ## books 'delete'
 
-Descripción: Eliminar un cuaderno. Se debe especificar el nombre. Opcionalmente, se puede pasar el parámetro "--global" para eliminar todas las notas dentro del cuaderno global.
-Argumentos obligatorios: "name"
-Argumentos opcionales: --global
+-   Descripción: Eliminar un cuaderno. Se debe especificar el nombre. Opcionalmente, se puede pasar el parámetro "--global" para eliminar todas las notas dentro del cuaderno global.
+-   Argumentos obligatorios: "name"
+-   Argumentos opcionales: --global
 
 ## books 'list'
 
-Descripción: Lista todos los cuadernos del directorio ".my_rns".
-Argumentos obligatorios: -
-Argumentos opcionales: -
+-   Descripción: Lista todos los cuadernos del directorio ".my_rns".
+-   Argumentos obligatorios: -
+-   Argumentos opcionales: -
 
 ## books 'rename'
 
-Descripción: Renombrar un cuaderno. Se deben especificar el viejo_nombre y el nuevo_nombre.
-Argumentos obligatorios: "old_name", "new_name"
-Argumentos opcionales: -
+-   Descripción: Renombrar un cuaderno. Se deben especificar el viejo_nombre y el nuevo_nombre.
+-   Argumentos obligatorios: "old_name", "new_name"
+-   Argumentos opcionales: -
 
 # Notes --> Uso y comandos
 
@@ -44,36 +45,36 @@ Ejemplo de creación de una nota --> Ejecutar el siguiente comando: ruby bin/rn 
 
 ## notes 'create'
 
-Descripción: Crear una nota. Se debe especificar el título. Opcionalmente, se le puede pasar el parámetro "--book" para crear una nota dentro de un cuaderno específico. Si no se especifica un book, la nota se almacenará en el cuaderno global.
-Argumentos obligatorios: "title"
-Argumentos opcionales: --book "a_book"
+-   Descripción: Crear una nota. Se debe especificar el título. Opcionalmente, se le puede pasar el parámetro "--book" para crear una nota dentro de un cuaderno específico. Si no se especifica un book, la nota se almacenará en el cuaderno global.
+-   Argumentos obligatorios: "title"
+-   Argumentos opcionales: --book "a_book"
 
 ## notes 'delete'
 
-Descripción: Eliminar una nota. Se debe especificar el título. Opcionalmente, se puede pasar el parámetro "--book" para eliminar una nota dentro de un cuaderno específico. Si no se especifica un book, la nota se eliminará desde el cuaderno global.
-Argumentos obligatorios: "title"
-Argumentos opcionales: --book "a_book"
+-   Descripción: Eliminar una nota. Se debe especificar el título. Opcionalmente, se puede pasar el parámetro "--book" para eliminar una nota dentro de un cuaderno específico. Si no se especifica un book, la nota se eliminará desde el cuaderno global.
+-   Argumentos obligatorios: "title"
+-   Argumentos opcionales: --book "a_book"
 
 ## notes 'edit'
 
-Descripción: Editar una nota. Se debe especificar el título. Opcionalmente, se puede pasar el parámetro "--book" para buscar una nota dentro de un cuaderno específico. Si no se especifica un book, la nota se buscará dentro del cuaderno global.
-Argumentos obligatorios: "title"
-Argumentos opcionales: --book "a_book"
+-   Descripción: Editar una nota. Se debe especificar el título. Opcionalmente, se puede pasar el parámetro "--book" para buscar una nota dentro de un cuaderno específico. Si no se especifica un book, la nota se buscará dentro del cuaderno global.
+-   Argumentos obligatorios: "title"
+-   Argumentos opcionales: --book "a_book"
 
 ## notes 'retitle'
 
-Descripción: Renombrar el título de una nota. Se deben especificar el viejo_titulo y el nuevo_titulo. Opcionalmente, se puede pasar el parámetro "--book" para buscar una nota dentro de un cuaderno específico. Si no se especifica un book, la nota se buscará dentro del cuaderno global.
-Argumentos obligatorios: "old_title", "new_title"
-Argumentos opcionales: --book "a_book"
+-   Descripción: Renombrar el título de una nota. Se deben especificar el viejo_titulo y el nuevo_titulo. Opcionalmente, se puede pasar el parámetro "--book" para buscar una nota dentro de un cuaderno específico. Si no se especifica un book, la nota se buscará dentro del cuaderno global.
+-   Argumentos obligatorios: "old_title", "new_title"
+-   Argumentos opcionales: --book "a_book"
 
 ## notes 'list'
 
-Descripción: Listado de notas. Opcionalmente, se puede pasar el parámetro "--book" para listar las notas dentro de un cuaderno específico o el parámetro "--global" para listar todas las notas del cuaderno global. Si no se pasan argumentos, se listarán todas las notas.
-Argumentos obligatorios: -
-Argumentos opcionales: --book "a_book", --global
+-   Descripción: Listado de notas. Opcionalmente, se puede pasar el parámetro "--book" para listar las notas dentro de un cuaderno específico o el parámetro "--global" para listar todas las notas del cuaderno global. Si no se pasan argumentos, se listarán todas las notas.
+-   Argumentos obligatorios: -
+-   Argumentos opcionales: --book "a_book", --global
 
 ## notes 'show'
 
-Descripción: Muestra el contenido de una nota. Se debe especificar el título. Opcionalmente, se puede pasar el parámetro "--book" para buscar una nota dentro de un cuaderno específico. Si no se especifica un book, la nota se buscará dentro del cuaderno global.
-Argumentos obligatorios: "title"
-Argumentos opcionales: --book "a_book"
+-   Descripción: Muestra el contenido de una nota. Se debe especificar el título. Opcionalmente, se puede pasar el parámetro "--book" para buscar una nota dentro de un cuaderno específico. Si no se especifica un book, la nota se buscará dentro del cuaderno global.
+-   Argumentos obligatorios: "title"
+-   Argumentos opcionales: --book "a_book"
