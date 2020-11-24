@@ -1,61 +1,27 @@
 require_relative "validator"
+require_relative "../models/notes"
 module RN
   module Commands
     module Notes
+      NOTE = Note.new()
       class Create < Dry::CLI::Command
-        include Validator
         desc 'Crear una nota. Se debe especificar el título. Opcionalmente, se le puede pasar el parámetro "--book" para crear una nota dentro de un cuaderno específico. Si no se especifica un book, la nota se almacenará en el cuaderno global.'
 
         argument :title, required: true, desc: 'Title of the note'
         option :book, type: :string, desc: 'Book'
 
         example [
-          'todo                         # Creates a note titled "todo" in the global book',
+          'todo                        # Creates a note titled "todo" in the global book',
           '"New note" --book "My book" # Creates a note titled "New note" in the book "My book"',
           'thoughts --book Memoires    # Creates a note titled "thoughts" in the book "Memoires"'
         ]
 
         def call(title:, **options)
-          book = options[:book]
-
-          set_default_path()
-          check_directory(@@path)
-
-          # Si me llega un book como parámetro
-          if (book)
-
-            filtered_book = turn_invalid_into_valid(book)
-
-            # Completo el path con el book que llegó por parametro
-            add_to_path("/#{filtered_book}")
-
-            # Chequeo que el book exista
-            if (!Dir.exists?(@@path))
-              return warn "El cuaderno '#{filtered_book}' no existe. Debe crearlo primero para luego agregarle una nota."
-            end
-
-          else
-            # Completo el path con el book default "Cuaderno Global"
-            add_to_path("/#{@@default_book}")
-          end
-
-          filtered_title = turn_invalid_into_valid(title)
-
-          # Completo el path con el nombre de la nota
-            add_to_path("/#{filtered_title}#{@@extension}")
-
-          # Chequeo que no exista otra nota con el mismo nombre dentro del mismo book --> Si no existe, la creo.
-          if (!File.file?(@@path))
-            TTY::Editor.open(@@path)
-            return puts "La nota '#{filtered_title}' fue creada exitosamente"
-          else
-            warn "La nota '#{filtered_title}' ya existe"
-          end
+          NOTE.create(title, **options)
         end
       end
 
       class Delete < Dry::CLI::Command
-        include Validator
         desc 'Eliminar una nota. Se debe especificar el título. Opcionalmente, se puede pasar el parámetro "--book" para eliminar una nota dentro de un cuaderno específico. Si no se especifica un book, la nota se eliminará desde el cuaderno global.'
 
         argument :title, required: true, desc: 'Title of the note'
@@ -68,50 +34,11 @@ module RN
         ]
 
         def call(title:, **options)
-          book = options[:book]
-
-          # Chequeo que el default directory exista
-          if (!default_directory_exists?)
-            return warn "No existen notas ni cuadernos. Primero debe crear una nota o un cuaderno."
-          end
-
-          set_default_path()
-
-          # Si me llega un book como parámetro
-          if (book)
-
-            filtered_book = turn_invalid_into_valid(book)
-
-            # Completo el path con el book que llegó por parametro
-            add_to_path("/#{filtered_book}")
-
-            # Chequeo que el book exista --> Si no existe, retorno un mensaje de error.
-            if (!Dir.exists?(@@path))
-              return warn "El cuaderno '#{filtered_book}' no existe"
-            end
-          else
-            # Completo el path con el book default "Cuaderno Global"
-            add_to_path("/#{@@default_book}")
-          end
-
-          filtered_title = turn_invalid_into_valid(title)
-
-          # Completo el path con el nombre de la nota
-          add_to_path("/#{filtered_title}#{@@extension}")
-
-          # Chequeo que exista la nota --> Si existe, la elimino.
-          if (File.file?(@@path))
-            File.delete(@@path)
-            puts "La nota '#{filtered_title}' fue eliminada exitosamente"
-          else
-            warn "La nota '#{filtered_title}' no existe"
-          end
-
+          NOTE.delete(title, **options)
         end
       end
 
       class Edit < Dry::CLI::Command
-        include Validator
         desc 'Editar una nota. Se debe especificar el título. Opcionalmente, se puede pasar el parámetro "--book" para buscar una nota dentro de un cuaderno específico. Si no se especifica un book, la nota se buscará dentro del cuaderno global.'
 
         argument :title, required: true, desc: 'Title of the note'
@@ -124,51 +51,11 @@ module RN
         ]
 
         def call(title:, **options)
-          book = options[:book]
-
-          # Chequeo que el default directory exista
-          if (!default_directory_exists?)
-            return warn "No existen notas ni cuadernos. Primero debe crear una nota o un cuaderno."
-          end
-
-          set_default_path()
-
-          # Si me llega un book como parámetro
-          if (book)
-
-            filtered_book = turn_invalid_into_valid(book)
-
-            # Completo el path con el book que llegó por parametro
-            add_to_path("/#{filtered_book}")
-
-            # Chequeo que el book exista --> Si no existe, retorno un mensaje de error.
-            if (!Dir.exists?(@@path))
-              return warn "El cuaderno '#{filtered_book}' no existe"
-            end
-          else
-            # Completo el path con el book default "Cuaderno Global"
-            add_to_path("/#{@@default_book}")
-          end
-
-          filtered_title = turn_invalid_into_valid(title)
-
-          # Completo el path con el nombre de la nota
-          add_to_path("/#{filtered_title}#{@@extension}")
-
-          # Chequeo que exista la nota --> Si existe, la abro para editar.
-          if (File.file?(@@path))
-            TTY::Editor.open(@@path)
-            puts File.read(@@path)
-            return puts "La nota '#{filtered_title}' fue editada con éxito"
-          else
-            warn "La nota '#{filtered_title}' no existe"
-          end
-
+          NOTE.edit(title, **options)
         end
       end
 
       class Retitle < Dry::CLI::Command
-        include Validator
         desc 'Renombrar el título de una nota. Se deben especificar el viejo_titulo y el nuevo_titulo. Opcionalmente, se puede pasar el parámetro "--book" para buscar una nota dentro de un cuaderno específico. Si no se especifica un book, la nota se buscará dentro del cuaderno global.'
 
         argument :old_title, required: true, desc: 'Current title of the note'
@@ -182,57 +69,11 @@ module RN
         ]
 
         def call(old_title:, new_title:, **options)
-          book = options[:book]
-
-          # Chequeo que el default directory exista
-          if (!default_directory_exists?)
-            return warn "No existen notas ni cuadernos. Primero debe crear una nota o un cuaderno."
-          end
-
-          set_default_path()
-
-          # Si me llega un book como parámetro
-          if (book)
-
-            filtered_book = turn_invalid_into_valid(book)
-
-            # Completo el path con el book que llegó por parametro
-            add_to_path("/#{filtered_book}")
-
-            # Chequeo que el book exista --> Si no existe, retorno un mensaje de error.
-            if (!Dir.exists?(@@path))
-              return warn "El cuaderno '#{filtered_book}' no existe"
-            end
-          else
-            # Completo el path con el book default "Cuaderno Global"
-            add_to_path("/#{@@default_book}")
-          end
-
-          filtered_old_title = turn_invalid_into_valid(old_title)
-          filtered_new_title = turn_invalid_into_valid(new_title)
-
-          # Completo el path con el nombre de la nota
-          path_old_title = @@path + "/#{filtered_old_title}#{@@extension}"
-          path_new_title = @@path + "/#{filtered_new_title}#{@@extension}"
-
-          # Chequeo que exista la nota
-          if (File.file?(path_old_title))
-            # Si existe, chequeo que no haya otra nota con el mismo nombre --> Si no hay, la retitulo
-            if (!File.file?(path_new_title))
-              File.rename(path_old_title, path_new_title)
-              return puts "La nota '#{filtered_old_title}' fue retitulada por '#{filtered_new_title}' exitosamente"
-            else
-              return warn "La nota '#{filtered_old_title}' no puede ser retitulada porque la nota '#{filtered_new_title}' ya existe"
-            end
-          else
-            warn "La nota '#{filtered_old_title}' no existe"
-          end
-
+          NOTE.retitle(old_title, new_title, **options)
         end
       end
 
       class List < Dry::CLI::Command
-        include Validator
         desc 'Listado de notas. Opcionalmente, se puede pasar el parámetro "--book" para listar las notas dentro de un cuaderno específico o el parámetro "--global" para listar todas las notas del cuaderno global. Si no se pasan argumentos, se listarán todas las notas.'
 
         option :book, type: :string, desc: 'Book'
@@ -246,74 +87,11 @@ module RN
         ]
 
         def call(**options)
-          book = options[:book]
-          global = options[:global]
-
-          # Chequeo que el default directory exista
-          if (!default_directory_exists?)
-            return warn "No existen notas para listar. Primero debe crear una nota o un cuaderno."
-          end
-
-          set_default_path()
-
-          # Si me llega un book como parámetro
-          if (book)
-
-            filtered_book = turn_invalid_into_valid(book)
-
-            # Completo el path con el book que llegó por parametro
-            add_to_path("/#{filtered_book}")
-
-            # Chequeo que el book exista --> Si no existe, retorno mensaje de error.
-            if (!Dir.exists?(@@path))
-              return warn "El cuaderno '#{filtered_book}' no existe"
-            # Si existe, listo las notas del book especificado
-            else
-              # Chequeo que haya notas --> Si no hay, retorno un mensaje avisando que no hay notas
-              if ((Dir.entries(@@path) - %w[. ..]).empty?)
-                return warn "No hay notas en el cuaderno '#{filtered_book}'"
-              else
-                return puts (Dir.entries(@@path) - %w[. ..])
-              end
-            end
-          end
-
-          # Si me llega global como parámetro
-          if (global)
-            # Completo el path con el book default "Cuaderno Global"
-            add_to_path("/#{@@default_book}")
-            # Chequeo que el book exista --> Si no existe, retorno mensaje de error.
-            if (!Dir.exists?(@@path))
-              return warn "El cuaderno '#{@@default_book}' no existe. Primero debe crear una nota o un cuaderno."
-            end
-            # Chequeo que haya notas --> Si no hay, retorno un mensaje avisando que no hay notas
-            if ((Dir.entries(@@path) - %w[. ..]).empty?)
-              return warn "No hay notas en el cuaderno '#{@@default_book}'"
-            else
-              # Listo las notas del Cuaderno Global
-              return puts (Dir.entries(@@path) - %w[. ..])
-            end
-          end
-
-          # Si no me llegaron parámetros opcionales, listo todas las notas (incluidas las del Cuaderno Global)
-          books_count = (Dir.entries(@@path) - %w[. ..]).count
-          books_names = (Dir.entries(@@path) - %w[. ..])
-
-          books_count.times { |i|
-            (new_path = @@path + "/#{books_names[i]}")
-            puts "Notas del cuaderno '#{books_names[i]}':"
-            if ((Dir.entries(new_path) - %w[. ..]).empty?)
-              puts "No hay notas en el cuaderno"
-            else
-              puts (Dir.entries(new_path) - %w[. ..])
-            end
-          }
-
+          NOTE.list(**options)
         end
       end
 
       class Show < Dry::CLI::Command
-        include Validator
         desc 'Muestra el contenido de una nota. Se debe especificar el título. Opcionalmente, se puede pasar el parámetro "--book" para buscar una nota dentro de un cuaderno específico. Si no se especifica un book, la nota se buscará dentro del cuaderno global.'
 
         argument :title, required: true, desc: 'Title of the note'
@@ -326,46 +104,9 @@ module RN
         ]
 
         def call(title:, **options)
-          book = options[:book]
-
-          # Chequeo que el default directory exista
-          if (!default_directory_exists?)
-            return warn "No existen notas ni cuadernos. Primero debe crear una nota o un cuaderno."
-          end
-
-          set_default_path()
-
-          # Si me llega un book como parámetro
-          if (book)
-
-            filtered_book = turn_invalid_into_valid(book)
-
-            # Completo el path con el book que llegó por parametro
-            add_to_path("/#{filtered_book}")
-
-            # Chequeo que el book exista --> Si no existe, retorno un mensaje de error.
-            if (!Dir.exists?(@@path))
-              return warn "El cuaderno '#{filtered_book}' no existe"
-            end
-          else
-            # Completo el path con el book default "Cuaderno Global"
-            add_to_path("/#{@@default_book}")
-          end
-
-          filtered_title = turn_invalid_into_valid(title)
-
-          # Completo el path con el nombre de la nota
-          add_to_path("/#{filtered_title}#{@@extension}")
-
-          # Chequeo que exista la nota --> Si existe, la muestro.
-          if (File.file?(@@path))
-            puts "Contenido de la nota '#{filtered_title}':"
-            puts File.read(@@path)
-          else
-            warn "La nota '#{filtered_title}' no existe"
-          end
-
+          NOTE.show(title, **options)
         end
+
       end
     end
   end
