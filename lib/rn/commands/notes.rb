@@ -1,5 +1,4 @@
-require_relative "validator"
-require_relative "../models/notes"
+require_relative "../models/note"
 module RN
   module Commands
     module Notes
@@ -17,7 +16,8 @@ module RN
         ]
 
         def call(title:, **options)
-          NOTE.create(title, **options)
+          msg = NOTE.create(title, **options)
+          puts msg
         end
       end
 
@@ -34,7 +34,8 @@ module RN
         ]
 
         def call(title:, **options)
-          NOTE.delete(title, **options)
+          msg = NOTE.delete(title, **options)
+          puts msg
         end
       end
 
@@ -51,7 +52,8 @@ module RN
         ]
 
         def call(title:, **options)
-          NOTE.edit(title, **options)
+          msg = NOTE.edit(title, **options)
+          puts msg
         end
       end
 
@@ -69,7 +71,8 @@ module RN
         ]
 
         def call(old_title:, new_title:, **options)
-          NOTE.retitle(old_title, new_title, **options)
+          msg = NOTE.retitle(old_title, new_title, **options)
+          puts msg
         end
       end
 
@@ -87,7 +90,8 @@ module RN
         ]
 
         def call(**options)
-          NOTE.list(**options)
+          msg = NOTE.list(**options)
+          puts msg
         end
       end
 
@@ -104,7 +108,8 @@ module RN
         ]
 
         def call(title:, **options)
-          NOTE.show(title, **options)
+          msg = NOTE.show(title, **options)
+          puts msg
         end
 
       end

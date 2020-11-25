@@ -17,7 +17,7 @@ class Note
 
         # Chequeo que el book exista
         if (!Dir.exists?(@@path))
-            return warn "El cuaderno '#{filtered_book}' no existe. Debe crearlo primero para luego agregarle una nota."
+            return "El cuaderno '#{filtered_book}' no existe. Debe crearlo primero para luego agregarle una nota."
         end
 
         else
@@ -33,9 +33,9 @@ class Note
         # Chequeo que no exista otra nota con el mismo nombre dentro del mismo book --> Si no existe, la creo.
         if (!File.file?(@@path))
         TTY::Editor.open(@@path)
-        return puts "La nota '#{filtered_title}' fue creada exitosamente"
+        return "La nota '#{filtered_title}' fue creada exitosamente"
         else
-        warn "La nota '#{filtered_title}' ya existe"
+        return "La nota '#{filtered_title}' ya existe"
         end
     end
 
@@ -44,7 +44,7 @@ class Note
 
         # Chequeo que el default directory exista
         if (!default_directory_exists?)
-        return warn "No existen notas ni cuadernos. Primero debe crear una nota o un cuaderno."
+        return "No existen notas ni cuadernos. Primero debe crear una nota o un cuaderno."
         end
 
         set_default_path()
@@ -59,7 +59,7 @@ class Note
 
         # Chequeo que el book exista --> Si no existe, retorno un mensaje de error.
         if (!Dir.exists?(@@path))
-            return warn "El cuaderno '#{filtered_book}' no existe"
+            return "El cuaderno '#{filtered_book}' no existe"
         end
         else
         # Completo el path con el book default "Cuaderno Global"
@@ -74,9 +74,9 @@ class Note
         # Chequeo que exista la nota --> Si existe, la elimino.
         if (File.file?(@@path))
         File.delete(@@path)
-        puts "La nota '#{filtered_title}' fue eliminada exitosamente"
+        return "La nota '#{filtered_title}' fue eliminada exitosamente"
         else
-        warn "La nota '#{filtered_title}' no existe"
+        return "La nota '#{filtered_title}' no existe"
         end
     end
 
@@ -85,7 +85,7 @@ class Note
 
         # Chequeo que el default directory exista
         if (!default_directory_exists?)
-        return warn "No existen notas ni cuadernos. Primero debe crear una nota o un cuaderno."
+        return "No existen notas ni cuadernos. Primero debe crear una nota o un cuaderno."
         end
 
         set_default_path()
@@ -100,7 +100,7 @@ class Note
 
         # Chequeo que el book exista --> Si no existe, retorno un mensaje de error.
         if (!Dir.exists?(@@path))
-            return warn "El cuaderno '#{filtered_book}' no existe"
+            return "El cuaderno '#{filtered_book}' no existe"
         end
         else
         # Completo el path con el book default "Cuaderno Global"
@@ -116,9 +116,9 @@ class Note
         if (File.file?(@@path))
         TTY::Editor.open(@@path)
         puts File.read(@@path)
-        return puts "La nota '#{filtered_title}' fue editada con éxito"
+        return "La nota '#{filtered_title}' fue editada con éxito"
         else
-        warn "La nota '#{filtered_title}' no existe"
+        return "La nota '#{filtered_title}' no existe"
         end
     end
 
@@ -127,7 +127,7 @@ class Note
 
         # Chequeo que el default directory exista
         if (!default_directory_exists?)
-        return warn "No existen notas ni cuadernos. Primero debe crear una nota o un cuaderno."
+        return "No existen notas ni cuadernos. Primero debe crear una nota o un cuaderno."
         end
 
         set_default_path()
@@ -142,7 +142,7 @@ class Note
 
         # Chequeo que el book exista --> Si no existe, retorno un mensaje de error.
         if (!Dir.exists?(@@path))
-            return warn "El cuaderno '#{filtered_book}' no existe"
+            return "El cuaderno '#{filtered_book}' no existe"
         end
         else
         # Completo el path con el book default "Cuaderno Global"
@@ -161,12 +161,12 @@ class Note
         # Si existe, chequeo que no haya otra nota con el mismo nombre --> Si no hay, la retitulo
         if (!File.file?(path_new_title))
             File.rename(path_old_title, path_new_title)
-            return puts "La nota '#{filtered_old_title}' fue retitulada por '#{filtered_new_title}' exitosamente"
+            return "La nota '#{filtered_old_title}' fue retitulada por '#{filtered_new_title}' exitosamente"
         else
-            return warn "La nota '#{filtered_old_title}' no puede ser retitulada porque la nota '#{filtered_new_title}' ya existe"
+            return "La nota '#{filtered_old_title}' no puede ser retitulada porque la nota '#{filtered_new_title}' ya existe"
         end
         else
-        warn "La nota '#{filtered_old_title}' no existe"
+        return "La nota '#{filtered_old_title}' no existe"
         end
     end
 
@@ -176,7 +176,7 @@ class Note
 
         # Chequeo que el default directory exista
         if (!default_directory_exists?)
-        return warn "No existen notas para listar. Primero debe crear una nota o un cuaderno."
+        return "No existen notas para listar. Primero debe crear una nota o un cuaderno."
         end
 
         set_default_path()
@@ -191,14 +191,14 @@ class Note
 
         # Chequeo que el book exista --> Si no existe, retorno mensaje de error.
         if (!Dir.exists?(@@path))
-            return warn "El cuaderno '#{filtered_book}' no existe"
+            return "El cuaderno '#{filtered_book}' no existe"
         # Si existe, listo las notas del book especificado
         else
             # Chequeo que haya notas --> Si no hay, retorno un mensaje avisando que no hay notas
             if ((Dir.entries(@@path) - %w[. ..]).empty?)
-            return warn "No hay notas en el cuaderno '#{filtered_book}'"
+            return "No hay notas en el cuaderno '#{filtered_book}'"
             else
-            return puts (Dir.entries(@@path) - %w[. ..])
+            return (Dir.entries(@@path) - %w[. ..])
             end
         end
         end
@@ -209,14 +209,14 @@ class Note
         add_to_path("/#{@@default_book}")
         # Chequeo que el book exista --> Si no existe, retorno mensaje de error.
         if (!Dir.exists?(@@path))
-            return warn "El cuaderno '#{@@default_book}' no existe. Primero debe crear una nota o un cuaderno."
+            return "El cuaderno '#{@@default_book}' no existe. Primero debe crear una nota o un cuaderno."
         end
         # Chequeo que haya notas --> Si no hay, retorno un mensaje avisando que no hay notas
         if ((Dir.entries(@@path) - %w[. ..]).empty?)
-            return warn "No hay notas en el cuaderno '#{@@default_book}'"
+            return "No hay notas en el cuaderno '#{@@default_book}'"
         else
             # Listo las notas del Cuaderno Global
-            return puts (Dir.entries(@@path) - %w[. ..])
+            return (Dir.entries(@@path) - %w[. ..])
         end
         end
 
@@ -240,7 +240,7 @@ class Note
 
         # Chequeo que el default directory exista
         if (!default_directory_exists?)
-        return warn "No existen notas ni cuadernos. Primero debe crear una nota o un cuaderno."
+        return "No existen notas ni cuadernos. Primero debe crear una nota o un cuaderno."
         end
 
         set_default_path()
@@ -255,7 +255,7 @@ class Note
 
         # Chequeo que el book exista --> Si no existe, retorno un mensaje de error.
         if (!Dir.exists?(@@path))
-            return warn "El cuaderno '#{filtered_book}' no existe"
+            return "El cuaderno '#{filtered_book}' no existe"
         end
         else
         # Completo el path con el book default "Cuaderno Global"
@@ -269,10 +269,9 @@ class Note
 
         # Chequeo que exista la nota --> Si existe, la muestro.
         if (File.file?(@@path))
-        puts "Contenido de la nota '#{filtered_title}':"
-        puts File.read(@@path)
+        return "Contenido de la nota '#{filtered_title}':\n" + File.read(@@path)
         else
-        warn "La nota '#{filtered_title}' no existe"
+        return "La nota '#{filtered_title}' no existe"
         end
     end
 

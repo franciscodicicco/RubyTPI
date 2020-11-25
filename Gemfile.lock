@@ -4,6 +4,9 @@ GEM
     concurrent-ruby (1.1.7)
     dry-cli (0.6.0)
       concurrent-ruby (~> 1.0)
+    github-markdown (0.6.9)
+    github-md-to-html (0.1.0)
+      github-markdown
     pastel (0.8.0)
       tty-color (~> 0.5)
     tty-color (0.5.2)
@@ -25,6 +28,7 @@ PLATFORMS
 
 DEPENDENCIES
   dry-cli (~> 0.6)
+  github-md-to-html (~> 0.1.0)
   tty-editor (~> 0.6)
 
 RUBY VERSION

@@ -1,5 +1,4 @@
-require_relative "validator"
-require_relative "../models/books"
+require_relative "../models/book"
 module RN
   module Commands
     module Books
@@ -15,7 +14,8 @@ module RN
         ]
 
         def call(name:, **)
-            BOOK.create(name)
+            msg = BOOK.create(name)
+            puts msg
         end
       end
 
@@ -32,7 +32,8 @@ module RN
         ]
 
         def call(name: nil, **options)
-            BOOK.delete(name, **options)
+            msg = BOOK.delete(name, **options)
+            puts msg
         end
       end
 
@@ -44,7 +45,8 @@ module RN
         ]
 
         def call(*)
-          BOOK.list()
+          msg = BOOK.list()
+          puts msg
         end
       end
 
@@ -61,7 +63,8 @@ module RN
         ]
 
         def call(old_name:, new_name:, **)
-          BOOK.rename(old_name, new_name)
+          msg = BOOK.rename(old_name, new_name)
+          puts msg
         end
       end
     end

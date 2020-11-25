@@ -13,9 +13,9 @@ class Book
         # Chequeo que no exista el cuaderno --> Si no existe, lo creo.
         if (!Dir.exists?(@@path))
           Dir.mkdir(@@path)
-          puts "El cuaderno '#{name}' fue creado exitosamente"
+          return "El cuaderno '#{name}' fue creado exitosamente"
         else
-          warn "El cuaderno '#{name}' ya existe"
+          return "El cuaderno '#{name}' ya existe"
         end
     end
 
@@ -23,12 +23,12 @@ class Book
         global = options[:global]
         # Si me llega como parámetro el cuaderno "global" --> alerto un error
         if (name == @@default_book)
-        return warn "No se puede eliminar el cuaderno '#{@@default_book}'. Si desea eliminar su contenido, agregue el comando --global"
+        return "No se puede eliminar el cuaderno '#{@@default_book}'. Si desea eliminar su contenido, agregue el comando --global"
         end
 
         # Chequeo que el default directory exista
         if (!default_directory_exists?)
-        return warn "No existen notas ni cuadernos. Primero debe crear una nota o un cuaderno."
+        return "No existen notas ni cuadernos. Primero debe crear una nota o un cuaderno."
         end
 
         set_default_path()
@@ -39,7 +39,7 @@ class Book
         add_to_path("/#{@@default_book}")
         # Elimino todas las notas dentro del Cuaderno Global
         `rm -rf "#{@@path}"/*`
-        return puts "Todas las notas del '#{@@default_book}' fueron eliminadas"
+        return "Todas las notas del '#{@@default_book}' fueron eliminadas"
         end
 
         # Si no me llega --global, elimino el cuaderno que me llegó como parámetro y todas sus notas
@@ -50,36 +50,36 @@ class Book
 
         # Chequeo que el book exista --> Si no existe, retorno un mensaje de error.
         if (!Dir.exists?(@@path))
-        return warn "El cuaderno '#{filtered_name}' no existe"
+        return "El cuaderno '#{filtered_name}' no existe"
         end
 
         # Elimino el cuaderno que me llegó como parámetro y todas sus notas
         `rm -rf "#{@@path}"`
-        return puts "El cuaderno '#{name}' y todas sus notas fueron eliminadas"
+        return "El cuaderno '#{name}' y todas sus notas fueron eliminadas"
     end
 
     def list()
         # Chequeo que el default directory exista
         if (!default_directory_exists?)
-        return warn "No existen cuadernos para listar. Primero debe crear una nota o un cuaderno."
+        return "No existen cuadernos para listar. Primero debe crear una nota o un cuaderno."
         end
 
         set_default_path()
 
-        return puts (Dir.entries(@@path) - %w[. ..])
+        return (Dir.entries(@@path) - %w[. ..])
     end
 
     def rename(old_name, new_name)
         # Chequeo que el default directory exista
         if (!default_directory_exists?)
-        return warn "No existen notas ni cuadernos. Primero debe crear una nota o un cuaderno."
+        return "No existen notas ni cuadernos. Primero debe crear una nota o un cuaderno."
         end
 
         set_default_path()
 
         # Si me llega como parámetro el cuaderno "global" --> alerto un error
         if (old_name == @@default_book)
-        return warn "No se puede renombrar el cuaderno '#{@@default_book}'."
+        return "No se puede renombrar el cuaderno '#{@@default_book}'."
         end
 
         filtered_old_name = turn_invalid_into_valid(old_name)
@@ -94,12 +94,12 @@ class Book
         # Si existe, chequeo que no haya otro cuaderno con el mismo nombre --> Si no hay, lo renombro
         if (!Dir.exists?(path_new_name))
             File.rename(path_old_name, path_new_name)
-            return puts "El cuaderno '#{filtered_old_name}' fue renombrado por '#{filtered_new_name}' exitosamente"
+            return "El cuaderno '#{filtered_old_name}' fue renombrado por '#{filtered_new_name}' exitosamente"
         else
-            return warn "El cuaderno '#{filtered_old_name}' no puede ser renombrado porque el cuaderno '#{filtered_new_name}' ya existe"
+            return "El cuaderno '#{filtered_old_name}' no puede ser renombrado porque el cuaderno '#{filtered_new_name}' ya existe"
         end
         else
-        warn "El cuaderno '#{filtered_old_name}' no existe"
+        return "El cuaderno '#{filtered_old_name}' no existe"
         end
     end
 
