@@ -10,7 +10,10 @@ A continuación se listan las principales decisiones tomadas:
 -   Si al crear una nota se especifica un cuaderno no existente, la nota no se creará y se alertará que debe crear primero el cuaderno y luego la nota.
 -   El borrado de un cuaderno eliminará todas las notas contenidas dentro del mismo.
 -   Cuando un nombre de un cuaderno o un título de una nota posee caracteres inválidos, éstos son filtrados y se reemplazan para convertirse en "válidos". Se toma como caracter inválido la `"/"` (barra) y se reemplaza por un `"_"` (guión bajo).
--   Se utilizó la gema "github-markdown" para convertir a formato HTML. (Fuente: https://rubygems.org/gems/github-markdown)
+-   Se utilizó el formato en texto plano "markdown" (.md) para el contenido de las notas.
+-   Se seleccionó HTML como formato para la exportación.
+-   Para la exportación de múltiples notas en una sola operación, se generarán muchos archivos (uno por nota exportada), respetando la estructura de directorios que plantean los cuadernos de notas.
+-   Se utilizó la gema "github-markdown" para convertir desde markdown a HTML. (Fuente: https://rubygems.org/gems/github-markdown)
 
 # Books --> Uso y comandos
 
