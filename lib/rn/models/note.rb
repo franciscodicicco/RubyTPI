@@ -275,4 +275,94 @@ class Note
         end
     end
 
+    def export(**options)
+        title = options[:title]
+        book = options[:book]
+
+        # Chequeo que el default directory exista
+        if (!default_directory_exists?)
+            return "No existen notas ni cuadernos. Primero debe crear una nota o un cuaderno."
+        end
+
+        set_default_path()
+
+        if (title && book)
+            filtered_title = turn_invalid_into_valid(title)
+            filtered_book = turn_invalid_into_valid(book)
+
+            # Completo el path con el book que llegó por parametro
+            add_to_path("/#{filtered_book}")
+            # Chequeo que el book exista --> Si no existe, retorno un mensaje de error.
+            if (!Dir.exists?(@@path))
+                return "El cuaderno '#{filtered_book}' no existe"
+            end
+
+            # Completo el path con el nombre de la nota
+            add_to_path("/#{filtered_title}")
+
+            # Guardo dos paths con el nombre de la nota sin la extensión y le agrego las extensiones correspondientes
+            new_path = @@path
+            html_path = @@path
+            new_path += ".md"
+            html_path += ".html"
+
+            # Completo el path con la extensión default
+            add_to_path("#{@@extension}")
+
+            # Chequeo que exista la nota --> Si existe, la exporto.
+            if (File.file?(@@path))
+                # Creo una copia del archivo y le cambio la extensión default a extension ".md" (markdown)
+                FileUtils.cp @@path, "#{File.dirname(@@path)}/#{File.basename(@@path,'.*')}.md"
+                # Utilizo la gema github-markdown para convertir el archivo .md en html
+                md_file_content = File.read(new_path)
+                html_content = GitHub::Markdown.render(md_file_content)
+                # Guardo el contenido HTML que obtuve del resultado de la operación con la gema en una nota nueva
+                new_html_note = File.new(html_path, "w")
+                new_html_note.puts(html_content)
+                new_html_note.close
+                # Elimino el archivo ".md" creado anteriormente
+                FileUtils.rm (new_path)
+                return "La nota '#{filtered_title}' del cuaderno '#{filtered_book}' se ha exportado exitosamente"
+            else
+                return "La nota '#{filtered_title}' no existe"
+            end
+        end
+
+        if (!title && book)
+            filtered_book = turn_invalid_into_valid(book)
+
+            # Completo el path con el book que llegó por parametro
+            add_to_path("/#{filtered_book}")
+            # Chequeo que el book exista --> Si no existe, retorno un mensaje de error.
+            if (!Dir.exists?(@@path))
+                return "El cuaderno '#{filtered_book}' no existe"
+            end
+
+            ################### EXPORTAR ###################
+            return "Todas las notas del cuaderno '#{filtered_book}' se han exportado exitosamente"
+        end
+
+        if (title && !book)
+            filtered_title = turn_invalid_into_valid(title)
+
+            # Completo el path con el book default "Cuaderno Global"
+            add_to_path("/#{@@default_book}")
+
+            # Completo el path con el nombre de la nota
+            add_to_path("/#{filtered_title}#{@@extension}")
+
+            # Chequeo que exista la nota --> Si existe, la exporto.
+            if (File.file?(@@path))
+                ################### EXPORTAR ###################
+                return "La nota '#{filtered_title}' del cuaderno '#{@@default_book}' se ha exportado exitosamente"
+            else
+                return "La nota '#{filtered_title}' no existe"
+            end
+        end
+
+
+        ################### EXPORTAR ###################
+        return "Exporto todas las notas de todos los cuadernos del cajón de notas"
+    end
+
 end

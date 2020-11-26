@@ -113,6 +113,27 @@ module RN
         end
 
       end
+
+      class Export < Dry::CLI::Command
+        desc 'Exporta el contenido de una nota. Opcionalmente, se puede pasar el parámetro "--title" para buscar una nota específica. También se le puede pasar el parámetro "--book" para buscar una nota dentro de un cuaderno específico. Si no se especifica un book, la nota se buscará dentro del cuaderno global. Si no se pasan el parámetros, se exportarán todas las notas de todos los cuadernos del cajón de notas'
+
+        option :title, type: :string, desc: 'Title of the note'
+        option :book, type: :string, desc: 'Title of the Book'
+
+        example [
+          '--title "note"                      # Exports a note titled "note" from the global book',
+          '--title "New note" --book "My book" # Exports a note titled "New note" from the book "My book"',
+          '--book Memoires                     # Exports all notes from the book "Memoires"',
+          '                                    # Exports all notes from all books'
+        ]
+
+        def call(**options)
+          msg = NOTE.export(**options)
+          puts msg
+        end
+
+      end
+
     end
   end
 end
