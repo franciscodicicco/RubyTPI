@@ -1,9 +1,10 @@
 class BooksController < ApplicationController
+  before_action :set_user
   before_action :set_book, only: [:show, :edit, :update, :destroy]
 
   # GET /books
   def index
-    @books = Book.all
+    @books = @user.books
   end
 
   # GET /books/1
@@ -12,7 +13,7 @@ class BooksController < ApplicationController
 
   # GET /books/new
   def new
-    @book = Book.new
+    @book = @user.books.new
   end
 
   # GET /books/1/edit
@@ -21,7 +22,7 @@ class BooksController < ApplicationController
 
   # POST /books
   def create
-    @book = Book.new(book_params)
+    @book = @user.books.new(book_params)
 
     if @book.save
       redirect_to @book, notice: 'Book was successfully created.'
@@ -46,9 +47,13 @@ class BooksController < ApplicationController
   end
 
   private
+
+    def set_user
+      @user = User.find(params[:user_id])
+    end
     # Use callbacks to share common setup or constraints between actions.
     def set_book
-      @book = Book.find(params[:id])
+      @book = @user.books.find(params[:id])
     end
 
     # Only allow a list of trusted parameters through.

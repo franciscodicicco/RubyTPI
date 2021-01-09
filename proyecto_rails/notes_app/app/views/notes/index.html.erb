@@ -19,7 +19,7 @@
         <td><%= note.title %></td>
         <td><%= note.content %></td>
         <td><%= link_to 'Show', [@book, note] %></td>
-        <td><%= link_to 'Edit', edit_note_path(@book, note) %></td>
+        <td><%= link_to 'Edit', edit_book_note_path(@book, note) %></td>
         <td><%= link_to 'Destroy', [@book, note], method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
@@ -28,4 +28,4 @@
 
 <br>
 
-<%= link_to 'New Note', new_note_path %>
+<%= link_to 'New Note', new_book_note_path(@book) %>

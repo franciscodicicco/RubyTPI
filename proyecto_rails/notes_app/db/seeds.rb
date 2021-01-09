@@ -6,4 +6,10 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-global_book = Book.create name: "Global Book"
+# 1..User.count do { |u|
+#     Book.create name: "Global Book", user: u
+# }
+
+u1 = User.create(email: "fran@gmail.com", password: "123")
+
+b1 = Book.create(name: "Global Book", user: u1)
