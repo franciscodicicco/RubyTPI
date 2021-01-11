@@ -1,14 +1,29 @@
 <p id="notice"><%= notice %></p>
 
+<h1>Book: <%= @book.name %> </h1>
+
 <p>
   <strong>User:</strong>
-  <%= @book.user_id %>
+  <%= @book.user%>
 </p>
 
+<h2>List of Notes</h2>
 <p>
-  <strong>Name:</strong>
-  <%= @book.name %>
+  <% if @book.notes == 0 %>
+  <p>No notes yet!</p>
+  <% end %>
+  <ul>
+    <% @book.notes.each do |note| %>
+      <li>
+        <%= note %>
+      </li>
+    <% end  %>
+  </ul>
 </p>
 
-<%= link_to 'Edit', edit_book_path(@book) %> |
-<%= link_to 'Back', books_path %>
+<%= link_to 'See notes', user_book_notes_path(@user, @book) %>
+<br>
+<br>
+
+<%= link_to 'Edit', edit_user_book_path(@user, @book) %> |
+<%= link_to 'Back', user_books_path %>

@@ -1,4 +1,5 @@
 class NotesController < ApplicationController
+  before_action :set_user
   before_action :set_book
   before_action :set_note, only: [:show, :edit, :update, :destroy]
 
@@ -25,7 +26,7 @@ class NotesController < ApplicationController
     @note = @book.notes.new(note_params)
 
     if @note.save
-      redirect_to @note, notice: 'Note was successfully created.'
+      redirect_to [@user, @book, @note], notice: 'Note was successfully created.'
     else
       render :new
     end
@@ -34,7 +35,7 @@ class NotesController < ApplicationController
   # PATCH/PUT /notes/1
   def update
     if @note.update(note_params)
-      redirect_to @note, notice: 'Note was successfully updated.'
+      redirect_to [@user, @book, @note], notice: 'Note was successfully updated.'
     else
       render :edit
     end
@@ -43,10 +44,15 @@ class NotesController < ApplicationController
   # DELETE /notes/1
   def destroy
     @note.destroy
-    redirect_to notes_url, notice: 'Note was successfully destroyed.'
+    redirect_to user_book_notes_url, notice: 'Note was successfully destroyed.'
   end
 
   private
+
+    def set_user
+      @user = User.find(params[:user_id])
+    end
+
     def set_book
       @book = Book.find(params[:book_id])
     end
