@@ -1,0 +1,22 @@
+<p class="notice"><%= notice %></p>
+<p class="alert"><%= alert %></p>
+<h1>Welcome to Ruby Notes <%= @user.email %>!</h1>
+
+<h2>List of Books</h2>
+<p>
+  <% if @books.empty? %>
+  <p>No books yet!</p>
+  <% end %>
+  <ul>
+    <% @books.each do |book| %>
+      <li>
+        <%= book %>
+      </li>
+    <% end  %>
+  </ul>
+</p>
+
+
+<br>
+
+<%= link_to 'My books', user_books_path(current_user) %>
