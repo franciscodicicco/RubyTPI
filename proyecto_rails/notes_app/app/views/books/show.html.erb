@@ -5,9 +5,9 @@
 <h2>List of Notes</h2>
 <p>
   <% if @book.notes.empty? %>
-  <p>No notes yet!</p>
+  <h4>No notes yet!</h4>
   <% end %>
-  <ul>
+  <ul class="ul-listof">
     <% @book.notes.each do |note| %>
       <li>
         <%= note %>

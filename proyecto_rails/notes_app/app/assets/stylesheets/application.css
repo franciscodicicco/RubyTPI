@@ -13,3 +13,172 @@
  *= require_tree .
  *= require_self
  */
+
+body {
+  background-image: url("ruby_pattern.png");
+  text-align: center !important;
+}
+
+h1 {
+  margin-bottom: 40px !important;
+}
+
+.navbar {
+  justify-content: center !important;
+  margin: auto !important;
+}
+
+input[type="submit"] {
+  display: inline-block;
+  margin-bottom: 0;
+  font-weight: normal;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  -ms-touch-action: manipulation;
+  touch-action: manipulation;
+  cursor: pointer;
+  background-image: none;
+  border: 1px solid transparent;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  border-radius: 4px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  color: #fff;
+  background-color: #d9534f;
+  border-color: #d43f3a;
+}
+
+input[type="submit"]:hover {
+  color: #fff;
+  background-color: #c9302c;
+  border-color: #ac2925;
+}
+
+a.nostyle:link {
+  text-decoration: inherit;
+  color: inherit;
+  cursor: auto;
+}
+
+a.nostyle:visited {
+  text-decoration: inherit;
+  color: inherit;
+  cursor: auto;
+}
+
+a {
+  margin: 6px;
+  text-decoration: none !important;
+  display: inline-block;
+  margin-bottom: 0;
+  font-weight: normal;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  -ms-touch-action: manipulation;
+  touch-action: manipulation;
+  cursor: pointer;
+  background-image: none;
+  border: 1px solid transparent;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  border-radius: 4px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  color: white !important;
+  background-color: #4a68ca !important;
+}
+
+a:hover {
+  color: #fff !;
+  background-color: #264dce !important;
+  border-color: #264dce !important;
+}
+
+#rubynotes {
+  text-align: center;
+  color: red !important;
+  font-weight: bolder;
+  font-size: 40px;
+  margin: 0px;
+  padding: 0px;
+}
+
+.alert {
+  padding: 15px;
+  margin-bottom: 20px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  font-size: larger !important;
+  color: #147db9 !important;
+}
+
+.notice {
+  padding: 15px;
+  margin-bottom: 20px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  font-size: larger !important;
+  color: #147db9 !important;
+}
+
+#notice {
+  padding: 15px;
+  margin-bottom: 20px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  font-size: larger !important;
+  color: #147db9 !important;
+}
+
+.alert .alert-link {
+  font-weight: bold;
+}
+
+#error_explanation {
+  margin: auto !important;
+  text-align: start !important;
+}
+
+.field_with_errors {
+  margin: auto !important;
+}
+
+table {
+  border-spacing: 10px;
+  border-collapse: separate;
+  margin: auto !important;
+}
+
+table a {
+  color: black !important;
+  background-color: #6ea14c !important;
+}
+
+table a:hover {
+  color: black !;
+  background-color: #6ad125 !important;
+  border-color: #6ad125 !important;
+}
+
+ul {
+  padding: 0px;
+  list-style-type: none;
+}
+
+.ul-listof li {
+  font-size: medium !important;
+}
+
+.ul-listof li:before {
+  content: "*";
+  margin-right: 6px;
+}
