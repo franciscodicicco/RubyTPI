@@ -2,13 +2,13 @@
 
 <h1>Notes of book: <%= @book.name %></h1>
 
-<table>
+<table class="table table-hover table-bordered container">
   <thead>
     <tr>
-      <th>Note ID</th>
-      <th>Title</th>
-      <th>Content</th>
-      <th colspan="3"></th>
+      <th scope="col">Note ID</th>
+      <th scope="col">Title</th>
+      <th scope="col">Content</th>
+      <th scope="col" colspan="3">Actions</th>
     </tr>
   </thead>
 
@@ -29,3 +29,4 @@
 <br>
 
 <%= link_to 'New Note', new_user_book_note_path(@book) %>
+<%= link_to 'Back', user_book_path(@user, @book) %>
