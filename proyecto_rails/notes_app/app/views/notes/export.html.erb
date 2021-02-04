@@ -1,0 +1,7 @@
+<h1 class="mt-5"><%= @note.title %> in HTML</h1>
+<hr>
+<div class="container">
+    <%= markdown(@note.content) %>
+</div>
+
+<%= link_to 'Back', user_book_notes_path %>

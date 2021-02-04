@@ -9,22 +9,22 @@
 
     3.times do |j|
     global_book.notes.create(book_id: global_book.id, title: "Global Book Note #{j}" , content: "
-        # Title
-        ## Subtitle
-        List:
-        - Element 1
-        - Element 2")
+# This is a title
+## This is a Subtitle
+List:
+- Element list Nº 1
+- Element list Nº 2")
     end
 
     5.times do |k|
         book = user.books.create(user_id: user.id, name:"Book #{k}")
         3.times do |n|
             book.notes.create(book_id: book.id, title: "Note #{n}", content: "
-                # Title
-                ## Subtitle
-                List:
-                - Element 1
-                - Element 2")
+# This is a title
+## This is a Subtitle
+List:
+- Element list Nº 1
+- Element list Nº 2")
         end
     end
 end

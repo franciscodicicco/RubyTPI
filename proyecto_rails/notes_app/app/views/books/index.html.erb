@@ -19,6 +19,7 @@
         <td><%= link_to 'Show', [@user, book] %></td>
         <td><%= link_to 'Edit', edit_user_book_path(@user, book) %></td>
         <td><%= link_to 'Destroy', [@user, book], method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to 'Export Notes to HTML', user_book_export_notes_path(@user,book)%></td>
       </tr>
     <% end %>
   </tbody>

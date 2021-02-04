@@ -1,0 +1,11 @@
+<h1 class="mt-5">Notes from <%= @book.name %> in HTML</h1>
+<hr>
+<div class="container">
+    <% @book.notes.each do |note| %>
+        <h4 style="color: red"><%= note.title %></h4>
+        <%= markdown(note.content) %>
+        <hr class="mt-4">
+    <% end %>
+</div>
+
+<%= link_to 'Back', user_books_path %>

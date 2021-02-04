@@ -1,7 +1,9 @@
 class NotesController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_user
   before_action :set_book
   before_action :set_note, only: [:show, :edit, :update, :destroy]
+  before_action :set_note_export , only: [:export]
 
   # GET /notes
   def index
@@ -19,6 +21,10 @@ class NotesController < ApplicationController
 
   # GET /notes/1/edit
   def edit
+  end
+
+  # GET /notes/1/export
+  def export
   end
 
   # POST /notes
@@ -60,6 +66,10 @@ class NotesController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_note
       @note = @book.notes.find(params[:id])
+    end
+
+    def set_note_export
+      @note = @book.notes.find(params[:note_id])
     end
 
     # Only allow a list of trusted parameters through.
