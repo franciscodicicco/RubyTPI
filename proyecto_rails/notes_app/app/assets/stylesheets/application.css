@@ -117,29 +117,30 @@ a:hover {
   margin-bottom: 20px;
   border: 1px solid transparent;
   border-radius: 4px;
-  font-size: larger !important;
-  color: #147db9 !important;
+  font-size: x-large !important;
+  color: #105bd3 !important;
+  font-weight: bold;
 }
 
 .notice {
   padding: 15px;
+  margin-top: 15px;
   margin-bottom: 20px;
   border: 1px solid transparent;
   border-radius: 4px;
-  font-size: larger !important;
-  color: #147db9 !important;
+  font-size: x-large !important;
+  color: #105bd3 !important;
+  font-weight: bold;
 }
 
 #notice {
   padding: 15px;
+  margin-top: 15px;
   margin-bottom: 20px;
   border: 1px solid transparent;
   border-radius: 4px;
-  font-size: larger !important;
-  color: #147db9 !important;
-}
-
-.alert .alert-link {
+  font-size: x-large !important;
+  color: #105bd3 !important;
   font-weight: bold;
 }
 
