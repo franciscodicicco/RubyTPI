@@ -5,10 +5,15 @@ class UsersController < ApplicationController
   def index
   end
 
+  # GET /users/1/export_all_notes
+  def export_all_notes
+    @books = @user.books
+  end
+
   private
-    # Use callbacks to share common setup or constraints between actions.
+
     def set_user
-      @users = User.all
+      @user = User.find(params[:user_id])
     end
 
 end

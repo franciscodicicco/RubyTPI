@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   get "home/index"
   root "home#index"
   resources :users do
+    get "export_all_notes"
     resources :books do
       get "export_notes"
       resources :notes do
