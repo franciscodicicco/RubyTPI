@@ -3,18 +3,19 @@
 <h1>Book: <%= @book.name %> </h1>
 
 <h2 style="color: green !important">List of Notes</h2>
-<p>
-  <% if @book.notes.empty? %>
-  <h4>No notes yet!</h4>
+
+<% if @book.notes.empty? %>
+<h4>No notes yet!</h4>
+<% end %>
+<table class="table table-bordered container col-md-5">
+<tbody>
+  <% @book.notes.each do |note| %>
+  <tr>
+    <td><%= note.title %></td>
+  </tr>
   <% end %>
-  <ul class="ul-listof">
-    <% @book.notes.each do |note| %>
-      <li>
-        <%= note %>
-      </li>
-    <% end  %>
-  </ul>
-</p>
+</tbody>
+</table>
 
 <%= link_to 'See Notes Table', user_book_notes_path(@user, @book) %>
 <br>

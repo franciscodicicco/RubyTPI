@@ -3,18 +3,19 @@
 <h1>Welcome to Ruby Notes <%= @user.email %>!</h1>
 
 <h2 style="color: green !important">List of Books</h2>
-<p>
-  <% if @books.empty? %>
-  <h4>No books yet!</h4>
+
+<% if @books.empty? %>
+<h4>No books yet!</h4>
+<% end %>
+<table class="table table-bordered container col-md-5">
+<tbody>
+  <% @books.each do |book| %>
+  <tr>
+    <td><%= book.name %></td>
+  </tr>
   <% end %>
-  <ul class="ul-listof">
-    <% @books.each do |book| %>
-      <li>
-        <%= book %>
-      </li>
-    <% end  %>
-  </ul>
-</p>
+</tbody>
+</table>
 
 <br>
 
