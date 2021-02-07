@@ -67,6 +67,26 @@ module RN
           puts msg
         end
       end
+
+      class Export < Dry::CLI::Command
+        desc 'Exporta las notas de un cuaderno. Se debe especificar el nombre del cuaderno. Opcionalmente se puede pasar el parámetro "--global" para exportar todas las notas del cuaderno global. Si no se pasan el parámetros, se exportarán todas las notas de todos los cuadernos del cajón de notas'
+
+        argument :name, required: false, desc: 'Name of the book'
+        option :global, type: :boolean, default: false, desc: 'Operates on the global book'
+
+        example [
+          '"My book"                           # Exports all notes from the book "My book",',
+          '--global                            # Exports all notes from the Global Book',
+          '                                    # Exports all notes from all books'
+        ]
+
+        def call(name: nil, **options)
+          msg = BOOK.export(name, **options)
+          puts msg
+        end
+
+      end
+
     end
   end
 end
