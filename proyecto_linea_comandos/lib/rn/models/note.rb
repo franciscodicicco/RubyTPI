@@ -1,6 +1,8 @@
 require_relative "validator"
+require_relative "export_helper"
 class Note
     include Validator
+    include Export_helper
     def create(title, **options)
         book = options[:book]
 
@@ -310,17 +312,7 @@ class Note
 
             # Chequeo que exista la nota --> Si existe, la exporto.
             if (File.file?(@@path))
-                # Creo una copia del archivo y le cambio la extensión default a extension ".md" (markdown)
-                FileUtils.cp @@path, "#{File.dirname(@@path)}/#{File.basename(@@path,'.*')}.md"
-                # Utilizo la gema github-markdown para convertir el archivo .md en html
-                md_file_content = File.read(new_path)
-                html_content = GitHub::Markdown.render(md_file_content)
-                # Guardo el contenido HTML que obtuve del resultado de la operación con la gema en una nota nueva
-                new_html_note = File.new(html_path, "w")
-                new_html_note.puts(html_content)
-                new_html_note.close
-                # Elimino el archivo ".md" creado anteriormente
-                FileUtils.rm (new_path)
+                export_note(@@path, new_path, html_path)
                 return "La nota '#{filtered_title}' del cuaderno '#{filtered_book}' se ha exportado exitosamente"
             else
                 return "La nota '#{filtered_title}' no existe"
@@ -344,17 +336,7 @@ class Note
 
             # Chequeo que exista la nota --> Si existe, la exporto.
             if (File.file?(@@path))
-                # Creo una copia del archivo y le cambio la extensión default a extension ".md" (markdown)
-                FileUtils.cp @@path, "#{File.dirname(@@path)}/#{File.basename(@@path,'.*')}.md"
-                # Utilizo la gema github-markdown para convertir el archivo .md en html
-                md_file_content = File.read(new_path)
-                html_content = GitHub::Markdown.render(md_file_content)
-                # Guardo el contenido HTML que obtuve del resultado de la operación con la gema en una nota nueva
-                new_html_note = File.new(html_path, "w")
-                new_html_note.puts(html_content)
-                new_html_note.close
-                # Elimino el archivo ".md" creado anteriormente
-                FileUtils.rm (new_path)
+                export_note(@@path, new_path, html_path)
                 return "La nota '#{filtered_title}' del cuaderno '#{@@default_book}' se ha exportado exitosamente"
             else
                 return "La nota '#{filtered_title}' no existe"

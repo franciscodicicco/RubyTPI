@@ -1,6 +1,8 @@
 require_relative "validator"
+require_relative "export_helper"
 class Book
     include Validator
+    include Export_helper
     def create(name)
         set_default_path()
         check_directory(@@path)
@@ -132,26 +134,12 @@ class Book
                 return "El cuaderno '#{filtered_book}' no contiene notas para exportar"
             end
 
-            book_path = @@path
+            base_path = @@path
             files_count = Dir.glob("#{@@path}/*.rn").count
             files = Dir.glob("#{@@path}/*.rn")
 
             files.each { |file|
-                # Creo una copia de cada nota y le cambio la extensión default a extension ".md" (markdown)
-                FileUtils.cp file, "#{File.dirname(file)}/#{File.basename(file,'.*')}.md"
-                # Guardo el nombre del archivo ".md" para posteriormente eliminarlo
-                md_file = "#{File.dirname(file)}/#{File.basename(file,'.*')}.md"
-                # Guardo el path con el nombre de cada nota y le agrego la extensión ".html"
-                html_path = book_path + "/" + File.basename("#{file}", '.rn') + ".html"
-                # Utilizo la gema github-markdown para convertir el archivo .md en html
-                md_file_content = File.read(file)
-                html_content = GitHub::Markdown.render(md_file_content)
-                # Guardo el contenido HTML que obtuve del resultado de la operación con la gema en una nota nueva
-                new_html_note = File.new(html_path, "w")
-                new_html_note.puts(html_content)
-                new_html_note.close
-                # Elimino el archivo ".md" creado anteriormente
-                FileUtils.rm (md_file)
+                export_all_notes(file, base_path)
             }
             return "Todas las notas del cuaderno '#{filtered_book}' se han exportado exitosamente"
         end
@@ -168,21 +156,7 @@ class Book
             files_count = Dir.glob("#{base_path}/*.rn").count
             files = Dir.glob("#{base_path}/*.rn")
             files.each { |file|
-                # Creo una copia de cada nota y le cambio la extensión default a extension ".md" (markdown)
-                FileUtils.cp file, "#{File.dirname(file)}/#{File.basename(file,'.*')}.md"
-                # Guardo el nombre del archivo ".md" para posteriormente eliminarlo
-                md_file = "#{File.dirname(file)}/#{File.basename(file,'.*')}.md"
-                # Guardo el path con el nombre de cada nota y le agrego la extensión ".html"
-                html_path = base_path + "/" + File.basename("#{file}", '.rn') + ".html"
-                # Utilizo la gema github-markdown para convertir el archivo .md en html
-                md_file_content = File.read(file)
-                html_content = GitHub::Markdown.render(md_file_content)
-                # Guardo el contenido HTML que obtuve del resultado de la operación con la gema en una nota nueva
-                new_html_note = File.new(html_path, "w")
-                new_html_note.puts(html_content)
-                new_html_note.close
-                # Elimino el archivo ".md" creado anteriormente
-                FileUtils.rm (md_file)
+                export_all_notes(file, base_path)
             }
         }
         return "Todas las notas del cajón de notas se han exportado exitosamente"
